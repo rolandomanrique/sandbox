@@ -7,6 +7,12 @@ Download [auto complete](https://github.com/git/git/blob/master/contrib/completi
 if [ -f path/to/git-completion.bash ]; then
   . path/to/git-completion.bash
 fi
+
+OR
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
 ```
 
 ~/.gitconfig:
