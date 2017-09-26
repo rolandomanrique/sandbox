@@ -13,6 +13,14 @@ OR
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
+
+function parse_git_branch {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+
+
+export PS1="\u@[\W]\$(parse_git_branch): "
+export CLICOLOR=1
 ```
 
 ~/.gitconfig:
