@@ -1,4 +1,11 @@
 Auto complete: https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
+~/.bash_profile
+
+```
+if [ -f path/to/git-completion.bash ]; then
+  . path/to/git-completion.bash
+fi
+```
 
 ~/.gitconfig:
 
