@@ -93,17 +93,24 @@ package object sudoku {
     None
   }
 
+  def clone(b: Board): Board = {
+    val nb = Array.ofDim[Digit](9, 9)
+    for (i <- 0 to 8) {
+      for (j <- 0 to 8) {
+        nb(i)(j) = b(i)(j)
+      }
+    }
+    nb
+  }
+
   def next(b: Board): Set[Board] = {
     findEmpty(b).map { case (x,y) =>
       val viable = missing(row(b, x)) intersect missing(col(b, y)) intersect missing(quad(b, quadIndex(x,y)))
-      val xxx = viable.map { d =>
-        val nb = b.clone() ;
-        nb(x.toInt-1)(y.toInt-1) = d ;
-
-        println(s"     E => x=$x y=$y d=$d${print(nb)}")
+      viable.map { d =>
+        val nb = clone(b)
+        nb(x.toInt-1)(y.toInt-1) = d
         nb
       }
-      xxx
     } getOrElse Set.empty
   }
 

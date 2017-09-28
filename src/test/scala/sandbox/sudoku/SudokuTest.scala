@@ -25,10 +25,7 @@ class SudokuTest extends FlatSpec with MustMatchers {
 
   behavior of "solve"
   it should "solve sudoku" in {
-
-
-
-    val in = sol.clone()
+    val in = sandbox.sudoku.clone(sol)
     in(0)(0) = E
     in(0)(1) = E
     in(1)(3) = E
