@@ -29,10 +29,10 @@ export SHELL_SESSION_HISTORY=0
 
 ```
 [include]
-        path = path/to/alias.git
+        path = ~/.alias.git
 ```
 
-alias.git:
+~/.alias.git:
 
 ```
 [alias]
@@ -45,4 +45,10 @@ alias.git:
   lg = log -p
   fetch-all-purge = fetch --all -p
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+```
+
+~/.inputrc:
+
+```
+set completion-ignore-case on
 ```
