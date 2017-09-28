@@ -26,28 +26,26 @@ class SudokuTest extends FlatSpec with MustMatchers {
   behavior of "solve"
   it should "solve sudoku" in {
     val in = sandbox.sudoku.clone(sol)
-    in(0)(0) = E
-    in(0)(1) = E
-    in(1)(3) = E
-    in(1)(4) = E
+    in(1) = Array( E, E, E,  E, E, E,  E, E, E)
+    in(5) = Array( E, E, E,  E, E, E,  E, E, E)
+    in(8) = Array( E, E, E,  E, E, E,  E, E, E)
+    (0 to 8).foreach(i => in(i)(2) = E)
+    (0 to 8).foreach(i => in(i)(5) = E)
+    (0 to 8).foreach(i => in(i)(8) = E)
     in(2)(6) = E
     in(2)(7) = E
     in(3)(0) = E
     in(8)(1) = E
+    in(0)(0) = E
+    in(0)(1) = E
     in(4)(3) = E
-    in(5)(5) = E
-    in(5)(6) = E
     in(6)(7) = E
-    in(6)(8) = E
     in(7)(4) = E
-    in(7)(5) = E
 
     println(s"START BOARD: ${sandbox.sudoku.print(in)}")
-
     val out: Option[Board] = solve(in)
-
     out must not be empty
-
+    println(s"FINAL BOARD: ${sandbox.sudoku.print(out.get)}")
   }
 
 }
