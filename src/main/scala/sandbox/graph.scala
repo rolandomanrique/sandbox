@@ -18,11 +18,26 @@ package object graph {
 
   case class Edge[A](from: Node[A], to: Node[A], cost: Int)
 
-  case class Graph[A](edges: Set[Edge[A]]) {
-    lazy val nodes: List[Node[A]] = edges.foldLeft(List.empty[Node[A]]){ case (l,e) => e.to :: e.from :: l }
-    lazy val outgoing: Map[Node[A], Set[Edge[A]]] = edges.groupBy(_.from)
-    lazy val incoming: Map[Node[A], Set[Edge[A]]] = edges.groupBy(_.to)
+  sealed trait Graph[A] {
+    val next: Node[A] => Set[Edge[A]]
   }
+
+  case class DirectionalGraph[A](edges: Set[Edge[A]]) extends Graph[A] {
+    private val out: Map[Node[A], Set[Edge[A]]] = edges.groupBy(_.from)
+    override val next: Node[A] => Set[Edge[A]] = out.getOrElse(_, Set.empty)
+  }
+
+  case class BidirectionalGraph[A](edges: Set[Edge[A]]) extends Graph[A] {
+    private val out: Map[Node[A], Set[Edge[A]]] = edges.groupBy(_.from)
+    private val in: Map[Node[A], Set[Edge[A]]] = edges.groupBy(_.from)
+    override val next: Node[A] => Set[Edge[A]] = n => out.getOrElse(n, Set.empty) ++ in.getOrElse(n, Set.empty)
+  }
+
+  case class DynamicGraph[A](f: A => Set[A]) extends Graph[A] {
+    override val next: Node[A] => Set[Edge[A]] = n => f(n.value).map(r => Edge(n,Node(r),0))
+  }
+
+  case class DynamicCostGraph[A](override val next: Node[A] => Set[Edge[A]]) extends Graph[A]
 
   private sealed trait Q[A] {
     def isEmpty: Boolean
@@ -32,28 +47,32 @@ package object graph {
 
   def shortestPath[A](graph: Graph[A])(from: Node[A], to: Node[A]): Option[Path[A]] = {
     val q: Q[A] = new mutable.PriorityQueue[Path[A]]()(Path.shortest[A]) with Q[A]
-    path[A](graph, q)(from, to)
+    path[A](graph, q)(from, _ == to)
   }
 
   def longestPath[A](graph: Graph[A])(from: Node[A], to: Node[A]): Option[Path[A]] = {
     val q: Q[A] = new mutable.PriorityQueue[Path[A]]()(Path.longest[A]) with Q[A]
-    path[A](graph, q)(from, to)
+    path[A](graph, q)(from, _ == to)
   }
 
   def bfs[A](graph: Graph[A])(from: Node[A], to: Node[A]): Option[Path[A]] = {
     val q: Q[A] = new mutable.Queue[Path[A]]() with Q[A]
-    path[A](graph, q)(from, to)
+    path[A](graph, q)(from, _ == to)
   }
 
   def dfs[A](graph: Graph[A])(from: Node[A], to: Node[A]): Option[Path[A]] = {
+    ddfs[A](graph)(from, _ == to)
+  }
+
+  def ddfs[A](graph: Graph[A])(from: Node[A], goalF: Node[A] => Boolean): Option[Path[A]] = {
     val q: Q[A] = new mutable.ArrayStack[Path[A]]() with Q[A] {
       override def dequeue(): Path[A] = pop()
       override def enqueue(a: Path[A]*): Unit = a.foreach(push)
     }
-    path[A](graph, q)(from, to)
+    path[A](graph, q)(from, goalF)
   }
 
-  def path[A](graph: Graph[A], q: Q[A])(from: Node[A], to: Node[A]): Option[Path[A]] = {
+  def path[A](graph: Graph[A], q: Q[A])(from: Node[A], goalF: Node[A] => Boolean): Option[Path[A]] = {
     @tailrec
     def go(visited: Set[Node[A]]): Option[Path[A]] = {
       if (q.isEmpty) {
@@ -62,10 +81,10 @@ package object graph {
         val curPath = q.dequeue()
         val lastNode = curPath.nodes.head
 //println(s"D => $curPath")
-        if (lastNode == to) {
+        if (goalF(lastNode)) {
           Option(curPath)
         } else {
-          graph.outgoing.getOrElse(lastNode, Set.empty)
+          graph.next(lastNode)
             .filterNot(e => visited.contains(e.to))
             .foreach(e => {
 //println(s"     E => ${Path(curPath.nodes ++ List(e.to), curPath.cost + e.cost)}")
