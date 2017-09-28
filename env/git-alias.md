@@ -21,6 +21,8 @@ function parse_git_branch {
 
 export PS1="\u@[\W]\$(parse_git_branch): "
 export CLICOLOR=1
+export CDPATH=.:$HOME/dev
+export SHELL_SESSION_HISTORY=0
 ```
 
 ~/.gitconfig:
