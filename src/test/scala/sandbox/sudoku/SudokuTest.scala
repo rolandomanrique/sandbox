@@ -4,18 +4,18 @@ import org.scalatest.{FlatSpec, MustMatchers}
 
 class SudokuTest extends FlatSpec with MustMatchers {
 
-  val sol = Array.ofDim[Digit](9, 9)
-  sol.update(0, Array( D1, D2, D3,  D4, D5, D6,  D7, D8, D9))
-  sol.update(1, Array( D7, D8, D9,  D1, D2, D3,  D4, D5, D6))
-  sol.update(2, Array( D4, D5, D6,  D7, D8, D9,  D1, D2, D3))
+  val sol = sandbox.sudoku.empty
+  sol(0) = Array( D1, D2, D3,  D4, D5, D6,  D7, D8, D9)
+  sol(1) = Array( D7, D8, D9,  D1, D2, D3,  D4, D5, D6)
+  sol(2) = Array( D4, D5, D6,  D7, D8, D9,  D1, D2, D3)
 
-  sol.update(3, Array( D2, D3, D4,  D5, D6, D7,  D8, D9, D1))
-  sol.update(4, Array( D8, D9, D1,  D2, D3, D4,  D5, D6, D7))
-  sol.update(5, Array( D5, D6, D7,  D8, D9, D1,  D2, D3, D4))
+  sol(3) = Array( D2, D3, D4,  D5, D6, D7,  D8, D9, D1)
+  sol(4) = Array( D8, D9, D1,  D2, D3, D4,  D5, D6, D7)
+  sol(5) = Array( D5, D6, D7,  D8, D9, D1,  D2, D3, D4)
 
-  sol.update(6, Array( D3, D4, D5,  D6, D7, D8,  D9, D1, D2))
-  sol.update(7, Array( D6, D7, D8,  D9, D1, D2,  D3, D4, D5))
-  sol.update(8, Array( D9, D1, D2,  D3, D4, D5,  D6, D7, D8))
+  sol(6) = Array( D3, D4, D5,  D6, D7, D8,  D9, D1, D2)
+  sol(7) = Array( D6, D7, D8,  D9, D1, D2,  D3, D4, D5)
+  sol(8) = Array( D9, D1, D2,  D3, D4, D5,  D6, D7, D8)
 
 
   behavior of "solve"

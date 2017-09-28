@@ -93,6 +93,16 @@ package object sudoku {
     None
   }
 
+  def empty: Board = {
+    val nb = Array.ofDim[Digit](9, 9)
+    for (i <- 0 to 8) {
+      for (j <- 0 to 8) {
+        nb(i)(j) = E
+      }
+    }
+    nb
+  }
+
   def clone(b: Board): Board = {
     val nb = Array.ofDim[Digit](9, 9)
     for (i <- 0 to 8) {
