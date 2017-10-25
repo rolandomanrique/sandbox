@@ -138,4 +138,32 @@ class AVLTreeTest extends FlatSpec with MustMatchers {
 
   }
 
+  behavior of "checkBST"
+  it should "return false if tree is not BST" in {
+    val in = Node(2,
+      Node(1),
+      Node(7,
+        Node(6),
+        Node(9, Node(4), Node(10), 1),
+        2
+      ),
+      3
+    )
+
+    checkBST(in, Int.MinValue, Int.MaxValue) must be(false)
+  }
+
+  it should "return true if tree is BST" in {
+    val in = Node(2,
+      Node(1),
+      Node(6,
+        Node(4),
+        Node(9, Node(7), Node(10), 1),
+        2
+      ),
+      3
+    )
+
+    checkBST(in, Int.MinValue, Int.MaxValue) must be(true)
+  }
 }

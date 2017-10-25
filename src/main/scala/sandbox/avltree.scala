@@ -110,4 +110,16 @@ package object avltree {
   }
 
 
+  /// BST ///
+  def checkBST[A](node: Node[A], min: A, max: A)(implicit ordering: Ordering[A]): Boolean = {
+    if (node == null) {
+      true
+    } else if (ordering.gt(min, node.value) || ordering.lt(max, node.value)) {
+      false
+    } else {
+      checkBST(node.L, min, node.value) && checkBST(node.R, node.value, max)
+    }
+  }
+
+
 }
