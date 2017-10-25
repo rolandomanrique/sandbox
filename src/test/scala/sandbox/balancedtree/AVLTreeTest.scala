@@ -122,7 +122,7 @@ class AVLTreeTest extends FlatSpec with MustMatchers {
       Node(1),
       Node(4,
         Node(3),
-        Node(5, Node(6), Node(7), 1),
+        Node(6, Node(5), Node(7), 1),
         2
       ),
       3

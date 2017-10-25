@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 package object avltree {
 
   case class Node[A](value: A, var L: Node[A], var R: Node[A], var h: Int)(implicit ordering: Ordering[A]) {
-    require(isOrdered, "balanced node must ensure L < this < R")
+    require(isOrdered, s"balanced node must ensure L(${L.value}) < $value < R(${R.value})")
 
     def isOrdered: Boolean = {
       (L == null || ordering.lt(L.value, value)) &&

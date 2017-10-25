@@ -1,4 +1,8 @@
-Download [auto complete](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash) or `brew install git && brew install bash-completion`
+Bash complete:
+
+```
+brew install git && brew install bash-completion
+```
 
 
 ~/.bash_profile
