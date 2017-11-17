@@ -123,3 +123,50 @@ package object avltree {
 
 
 }
+
+
+
+object TreeToList extends App {
+
+  case class Node[A](value: A) {
+    var left: Node[A] = _
+    var right: Node[A] = _
+    override def toString: String = value.toString
+  }
+
+
+  def toList[A](node: Node[A]): (Node[A], Node[A]) = {
+    val f = if (node.left != null) {
+      val (pf,pl) = toList(node.left)
+      node.left = pl
+      pl.right = node
+      pf
+    } else node
+
+    val l = if (node.right != null) {
+      val (nf,nl) = toList(node.right)
+      node.right = nf
+      nf.left = node
+      nl
+    } else node
+
+    (f,l)
+  }
+
+
+  val root = Node(5)
+  root.left = Node(2)
+  root.left.left = Node(1)
+  root.left.right = Node(3)
+  root.left.right.right = Node(4)
+  root.right = Node(7)
+  root.right.left = Node(6)
+
+  var res = toList(root)._1
+  while (res != null) {
+    print(res.value + " ")
+    res = res.right
+  }
+
+}
+
