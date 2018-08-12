@@ -75,9 +75,8 @@ function github-open {
   open "$GIT_URL/$TARGET_ORG/$TARGET_REP/tree/$GIT_BRANCH"
 }
 
-function runlike {
-  echo $(workon runlike ; runlike $1)
-}
-
 alias dockerbash='docker run --rm -it --entrypoint /bin/bash'
+alias editprofile='vi ~/.bash_profile && source ~/.bash_profile'
+alias editalias='vi ~/.bash_alias && source ~/.bash_alias'
+alias edithosts='sudo bash -c "vi /etc/hosts && killall -HUP mDNSResponder"'
 
