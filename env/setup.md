@@ -1,32 +1,34 @@
 Bash complete:
 
 ```
-brew install git && brew install bash-completion
+mkdir ~/.zsh
+curl -o ~/.zsh/git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+curl -o ~/.zsh/_git https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
 ```
 
-
-~/.bash_profile
+~/.zshrc
 
 ```
-if [ -f path/to/git-completion.bash ]; then
-  . path/to/git-completion.bash
-fi
+# Load Git completion
+zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
+fpath=(~/.zsh $fpath)
 
-OR
+autoload -Uz compinit && compinit
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
-fi
+# Load version control information
+autoload -Uz vcs_info
+precmd() { vcs_info }
 
-function parse_git_branch {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:git:*' formats '(%b)'
+ 
+# Set up the prompt (with git branch name)
+setopt PROMPT_SUBST
+PROMPT='%n@${PWD/#$HOME/~} ${vcs_info_msg_0_}: '
 
-
-export PS1="\u@[\W]\$(parse_git_branch): "
-export CLICOLOR=1
-export CDPATH=.:$HOME/dev
-export SHELL_SESSION_HISTORY=0
+# CDPATH
+setopt auto_cd
+cdpath=($HOME/dev)
 ```
 
 ~/.gitconfig:
@@ -49,10 +51,4 @@ export SHELL_SESSION_HISTORY=0
   lg = log -p
   fetch-all-purge = fetch --all -p
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-```
-
-~/.inputrc:
-
-```
-set completion-ignore-case on
 ```
